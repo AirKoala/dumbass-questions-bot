@@ -1,0 +1,29 @@
+CREATE TABLE question (
+  id INTEGER PRIMARY KEY,
+  added_on INTEGER NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  approved INTEGER NOT NULL DEFAULT FALSE,  -- 0 = false, 1 = true
+  author_id INTEGER NOT NULL,
+  guild_id INTEGER NOT NULL,
+  exhausted INTEGER NOT NULL DEFAULT FALSE,
+  deleted INTEGER NOT NULL DEFAULT FALSE,
+  content TEXT NOT NULL
+) STRICT;
+
+CREATE TABLE guild (
+  id INTEGER PRIMARY KEY,
+  question_channel_id INTEGER NOT NULL,
+  autothread INTEGER NOT NULL DEFAULT FALSE,
+  autoapprove INTEGER NOT NULL DEFAULT FALSE,
+  frequency_in_hours INTEGER NOT NULL DEFAULT 24,
+  last_question_asked_timestamp INTEGER NOT NULL
+) STRICT;
+
+CREATE TABLE moderator_role (
+  guild_id INTEGER PRIMARY KEY,
+  role_id INTEGER NOT NULL
+) STRICT;
+
+CREATE TABLE ping_role (
+  guild_id INTEGER PRIMARY KEY,
+  role_id INTEGER NOT NULL
+) STRICT;
