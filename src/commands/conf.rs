@@ -35,10 +35,7 @@ async fn pingrole(
     let guild_id = get_guild_id(ctx).await?;
     let mut config = ctx.data().get_config_for(guild_id).await?;
 
-    config.ping_roles = match role {
-        Some(role) => vec![role],
-        None => vec![],
-    };
+    config.ping_role = role;
 
     ctx.data().set_config_for(guild_id, &config).await?;
 
@@ -59,10 +56,7 @@ async fn modrole(
     let guild_id = get_guild_id(ctx).await?;
     let mut config = ctx.data().get_config_for(guild_id).await?;
 
-    config.mod_roles = match role {
-        Some(role) => vec![role],
-        None => vec![],
-    };
+    config.mod_role = role;
 
     ctx.data().set_config_for(guild_id, &config).await?;
 
@@ -85,10 +79,7 @@ async fn whitelistrole(
     let guild_id = get_guild_id(ctx).await?;
     let mut config = ctx.data().get_config_for(guild_id).await?;
 
-    config.whitelist_roles = match role {
-        Some(role) => vec![role],
-        None => vec![],
-    };
+    config.whitelist_role = role;
 
     ctx.data().set_config_for(guild_id, &config).await?;
 
@@ -111,10 +102,7 @@ async fn blacklistrole(
     let guild_id = get_guild_id(ctx).await?;
     let mut config = ctx.data().get_config_for(guild_id).await?;
 
-    config.blacklist_roles = match role {
-        Some(role) => vec![role],
-        None => vec![],
-    };
+    config.blacklist_role = role;
 
     ctx.data().set_config_for(guild_id, &config).await?;
 

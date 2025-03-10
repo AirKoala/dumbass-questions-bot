@@ -27,10 +27,10 @@ pub struct Config {
     pub qotd_channel: Option<serenity::ChannelId>,
     pub queue_channel: Option<serenity::ChannelId>,
     pub schedule: Option<Schedule>,
-    pub ping_roles: Vec<serenity::RoleId>,
-    pub mod_roles: Vec<serenity::RoleId>,
-    pub blacklist_roles: Vec<serenity::RoleId>,
-    pub whitelist_roles: Vec<serenity::RoleId>,
+    pub ping_role: Option<serenity::RoleId>,
+    pub mod_role: Option<serenity::RoleId>,
+    pub blacklist_role: Option<serenity::RoleId>,
+    pub whitelist_role: Option<serenity::RoleId>,
     pub autoapprove: bool,
     pub autothread: bool,
 }
@@ -66,53 +66,33 @@ impl Config {
             .field("Auto Thread", self.autothread.to_string(), true)
             .field(
                 "Ping Roles",
-                if self.ping_roles.is_empty() {
-                    "None".to_string()
-                } else {
-                    self.ping_roles
-                        .iter()
-                        .map(|r| r.mention().to_string())
-                        .collect::<Vec<String>>()
-                        .join(", ")
+                match &self.ping_role {
+                    Some(r) => r.mention().to_string(),
+                    None => "Not set.".to_string(),
                 },
                 false,
             )
             .field(
                 "Mod Roles",
-                if self.mod_roles.is_empty() {
-                    "None".to_string()
-                } else {
-                    self.mod_roles
-                        .iter()
-                        .map(|r| r.mention().to_string())
-                        .collect::<Vec<String>>()
-                        .join(", ")
+                match &self.mod_role {
+                    Some(r) => r.mention().to_string(),
+                    None => "Not set.".to_string(),
                 },
                 false,
             )
             .field(
                 "Blacklist Roles",
-                if self.blacklist_roles.is_empty() {
-                    "None".to_string()
-                } else {
-                    self.blacklist_roles
-                        .iter()
-                        .map(|r| r.to_string())
-                        .collect::<Vec<String>>()
-                        .join(", ")
+                match &self.blacklist_role {
+                    Some(r) => r.mention().to_string(),
+                    None => "Not set.".to_string(),
                 },
                 false,
             )
             .field(
                 "Whitelist Roles",
-                if self.whitelist_roles.is_empty() {
-                    "None".to_string()
-                } else {
-                    self.whitelist_roles
-                        .iter()
-                        .map(|r| r.to_string())
-                        .collect::<Vec<String>>()
-                        .join(", ")
+                match &self.whitelist_role {
+                    Some(r) => r.mention().to_string(),
+                    None => "Not set.".to_string(),
                 },
                 false,
             ))
