@@ -1,0 +1,21 @@
+/qotd add <question>
+
+/conf role ping
+/conf role mod
+/conf role blacklist
+- action row with dropdown
+
+/conf channel questions <channel>
+/conf channel queue <channel>
+
+/conf autothread <on|off>
+/conf autoapprove <on|off> 
+/conf frequency <number of hours between post> [UTC hhmm of first post]
+
+/mod next
+/mod approve
+
+contextmenu:
+/approve
+
+
