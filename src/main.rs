@@ -1,21 +1,20 @@
 mod commands;
+mod data;
+
+pub use crate::data::Data;
 
 use poise::serenity_prelude as serenity;
 use std::{
     collections::HashMap,
     env::var,
-    sync::{Arc, Mutex},
-    time::Duration,
+    sync::Mutex,
 };
 
 // Types used by all command functions
 type Error = Box<dyn std::error::Error + Send + Sync>;
 type Context<'a> = poise::Context<'a, Data, Error>;
 
-// Custom user data passed to all command functions
-pub struct Data {
-    votes: Mutex<HashMap<String, u32>>,
-}
+
 
 async fn on_error(error: poise::FrameworkError<'_, Data, Error>) {
     // This is our custom error handler
@@ -120,9 +119,7 @@ async fn main() {
                     }
                 }
 
-                Ok(Data {
-                    votes: Mutex::new(HashMap::new()),
-                })
+                Ok(Data::new())
             })
         })
         .options(options)

@@ -12,6 +12,5 @@ pub async fn reply_error(ctx: Context<'_>, error: impl Display) -> Result<(), Er
     )
     .await?;
 
-    // ctx.reply(format!("```{}```", error)).await?;
     Err(error.to_string().into())
 }
