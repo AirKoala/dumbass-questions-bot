@@ -119,7 +119,7 @@ async fn main() {
                     }
                 }
 
-                Ok(Data::new())
+                Ok(Data::new(&var("DATABASE_URL").expect("Missing `DATABASE_URL` env var")).await)
             })
         })
         .options(options)

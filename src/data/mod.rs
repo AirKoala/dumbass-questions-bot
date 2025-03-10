@@ -1,6 +1,6 @@
 pub mod config;
-pub mod question;
 pub mod database;
+pub mod question;
 
 use poise::serenity_prelude as serenity;
 use std::{collections::HashMap, sync::Mutex};
@@ -9,12 +9,14 @@ use std::{collections::HashMap, sync::Mutex};
 pub struct Data {
     config_cache: Mutex<HashMap<serenity::GuildId, config::Config>>,
     questions_cache: Mutex<HashMap<serenity::GuildId, Vec<question::Question>>>,
+    dbpool: sqlx::SqlitePool,
 }
 impl Data {
-    pub fn new() -> Self {
+    pub async fn new(dburl: &str) -> Self {
         Self {
             config_cache: Mutex::new(HashMap::new()),
             questions_cache: Mutex::new(HashMap::new()),
+            dbpool: database::connect(dburl, true).await,
         }
     }
 
@@ -22,13 +24,26 @@ impl Data {
         &self,
         guild_id: serenity::GuildId,
     ) -> Result<config::Config, crate::Error> {
-        Ok(self
-            .config_cache
-            .lock()
-            .unwrap()
-            .entry(guild_id)
-            .or_insert_with(|| config::Config::default()) // TODO: fetch from db
-            .clone())
+        let conf = {
+            let cache = self.config_cache.lock().unwrap();
+            cache.get(&guild_id).cloned()
+        };
+
+        let conf = match conf {
+            Some(c) => c.clone(),
+            None => {
+                let conf = database::fetch_config_for(&self.dbpool, guild_id)
+                    .await?
+                    .unwrap_or_default();
+                self.config_cache
+                    .lock()
+                    .unwrap()
+                    .insert(guild_id, conf.clone());
+                conf
+            }
+        };
+
+        Ok(conf)
     }
 
     pub async fn set_config_for(
@@ -38,8 +53,12 @@ impl Data {
     ) -> Result<(), crate::Error> {
         println!("Set config for guild {}", guild_id);
 
-        // TODO: save to db
-        self.config_cache.lock().unwrap().insert(guild_id, config.clone());
+        self.config_cache
+            .lock()
+            .unwrap()
+            .insert(guild_id, config.clone());
+
+        database::set_config_for(&self.dbpool, guild_id, config.clone()).await?;
         Ok(())
     }
 

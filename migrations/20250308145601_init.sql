@@ -9,21 +9,24 @@ CREATE TABLE question (
   content TEXT NOT NULL
 ) STRICT;
 
-CREATE TABLE guild (
-  id INTEGER PRIMARY KEY,
-  question_channel_id INTEGER NOT NULL,
+CREATE TABLE config (
+  guild_id INTEGER PRIMARY KEY,
+  qotd_channel_id INTEGER,
+  queue_channel_id INTEGER,
+  schedule_frequency_hours INTEGER,
+  schedule_first_post_timestamp INTEGER,
+  mod_role_id INTEGER,
+  ping_role_id INTEGER,
+  blacklist_role_id INTEGER,
+  whitelist_role_id INTEGER,
   autothread INTEGER NOT NULL DEFAULT FALSE,
-  autoapprove INTEGER NOT NULL DEFAULT FALSE,
-  frequency_in_hours INTEGER NOT NULL DEFAULT 24,
-  last_question_asked_timestamp INTEGER NOT NULL
+  autoapprove INTEGER NOT NULL DEFAULT FALSE
 ) STRICT;
 
-CREATE TABLE moderator_role (
-  guild_id INTEGER PRIMARY KEY,
-  role_id INTEGER NOT NULL
-) STRICT;
 
-CREATE TABLE ping_role (
-  guild_id INTEGER PRIMARY KEY,
-  role_id INTEGER NOT NULL
+CREATE TABLE qotd_history (
+  id INTEGER PRIMARY KEY,
+  question_id INTEGER NOT NULL,
+  posted_on INTEGER NOT NULL,
+  guild_id INTEGER NOT NULL
 ) STRICT;
